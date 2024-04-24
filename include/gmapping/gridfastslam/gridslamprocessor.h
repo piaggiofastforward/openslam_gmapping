@@ -9,6 +9,7 @@
 #include <gmapping/particlefilter/particlefilter.h>
 #include <gmapping/utils/point.h>
 #include <gmapping/utils/macro_params.h>
+#include "gmapping/utils/nullstream.h"
 #include <gmapping/log/sensorlog.h>
 #include <gmapping/sensor/sensor_range/rangesensor.h>
 #include <gmapping/sensor/sensor_range/rangereading.h>
@@ -127,6 +128,7 @@ namespace GMapping {
     typedef std::vector<Particle> ParticleVector;
     
     /** Constructs a GridSlamProcessor with default params, whose output is routed to a stream.
+     *  To suppress outputs from this node, pass GMapping::g_null_stream for both arguments.
      @param infoStr: (optional) the output stream, default cout
      @param errStr: (optional) the error output stream, default cerr
     */

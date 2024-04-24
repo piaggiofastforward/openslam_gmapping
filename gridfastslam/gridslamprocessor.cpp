@@ -17,8 +17,15 @@ const double m_distanceThresholdCheck = 20;
  
 using namespace std;
 
+  GridSlamProcessor::GridSlamProcessor(std::ostream& infoStr, std::ostream& errStr): m_infoStream(infoStr), m_errStream(errStr){
+    period_ = 5.0;
+    m_obsSigmaGain=1;
+    m_resampleThreshold=0.5;
+    m_minimumScore=0.;
+  }
+
   GridSlamProcessor::GridSlamProcessor(const GridSlamProcessor& gsp) 
-    :last_update_time_(0.0), m_particles(gsp.m_particles), m_infoStream(cout){
+    :last_update_time_(0.0), m_particles(gsp.m_particles), m_infoStream(gsp.m_infoStream), m_errStream(gsp.m_errStream){
     
     period_ = 5.0;
 
@@ -81,14 +88,6 @@ using namespace std;
     updateTreeWeights(false);
     if (m_infoStream)
       m_infoStream  << ".done!" <<endl;
-  }
-  
-  GridSlamProcessor::GridSlamProcessor(std::ostream& infoStr, std::ostream errStr): m_infoStream(infoStr), m_errStream(errStr){
-    period_ = 5.0;
-    m_obsSigmaGain=1;
-    m_resampleThreshold=0.5;
-    m_minimumScore=0.;
-	
   }
 
   GridSlamProcessor* GridSlamProcessor::clone() const {
