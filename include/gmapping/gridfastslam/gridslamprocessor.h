@@ -126,13 +126,11 @@ namespace GMapping {
     
     typedef std::vector<Particle> ParticleVector;
     
-    /** Constructs a GridSlamProcessor, initialized with the default parameters */
-    GridSlamProcessor();
-
-    /** Constructs a GridSlamProcessor, whose output is routed to a stream.
-     @param infoStr: the output stream
+    /** Constructs a GridSlamProcessor with default params, whose output is routed to a stream.
+     @param infoStr: (optional) the output stream, default cout
+     @param errStr: (optional) the error output stream, default cerr
     */
-    GridSlamProcessor(std::ostream& infoStr);
+    GridSlamProcessor(std::ostream& infoStr = std::cout, std::ostream& errStr = std::cerr);
     
     /** @returns  a deep copy of the grid slam processor with all the internal structures.
     */
@@ -305,6 +303,7 @@ namespace GMapping {
 
     // stream in which to write the messages
     std::ostream& m_infoStream;
+    std::ostream& m_errStream;
     
     
     // the functions below performs side effect on the internal structure,

@@ -17,14 +17,6 @@ const double m_distanceThresholdCheck = 20;
  
 using namespace std;
 
-  GridSlamProcessor::GridSlamProcessor(): m_infoStream(cout){
-    
-    period_ = 5.0;
-    m_obsSigmaGain=1;
-    m_resampleThreshold=0.5;
-    m_minimumScore=0.;
-  }
-  
   GridSlamProcessor::GridSlamProcessor(const GridSlamProcessor& gsp) 
     :last_update_time_(0.0), m_particles(gsp.m_particles), m_infoStream(cout){
     
@@ -91,7 +83,7 @@ using namespace std;
       m_infoStream  << ".done!" <<endl;
   }
   
-  GridSlamProcessor::GridSlamProcessor(std::ostream& infoS): m_infoStream(infoS){
+  GridSlamProcessor::GridSlamProcessor(std::ostream& infoStr, std::ostream errStr): m_infoStream(infoStr), m_errStream(errStr){
     period_ = 5.0;
     m_obsSigmaGain=1;
     m_resampleThreshold=0.5;
@@ -376,19 +368,19 @@ void GridSlamProcessor::setMotionModelParameters
     m_angularDistance+=fabs(move.theta);
     
     // if the robot jumps throw a warning
-    if (m_linearDistance>m_distanceThresholdCheck){
-      cerr << "***********************************************************************" << endl;
-      cerr << "********** Error: m_distanceThresholdCheck overridden!!!! *************" << endl;
-      cerr << "m_distanceThresholdCheck=" << m_distanceThresholdCheck << endl;
-      cerr << "Old Odometry Pose= " << m_odoPose.x << " " << m_odoPose.y 
+    if (m_linearDistance>m_distanceThresholdCheck && m_errStream){
+      m_errStream << "***********************************************************************" << endl;
+      m_errStream << "********** Error: m_distanceThresholdCheck overridden!!!! *************" << endl;
+      m_errStream << "m_distanceThresholdCheck=" << m_distanceThresholdCheck << endl;
+      m_errStream << "Old Odometry Pose= " << m_odoPose.x << " " << m_odoPose.y 
 	   << " " <<m_odoPose.theta << endl;
-      cerr << "New Odometry Pose (reported from observation)= " << relPose.x << " " << relPose.y 
+      m_errStream << "New Odometry Pose (reported from observation)= " << relPose.x << " " << relPose.y 
 	   << " " <<relPose.theta << endl;
-      cerr << "***********************************************************************" << endl;
-      cerr << "** The Odometry has a big jump here. This is probably a bug in the   **" << endl;
-      cerr << "** odometry/laser input. We continue now, but the result is probably **" << endl;
-      cerr << "** crap or can lead to a core dump since the map doesn't fit.... C&G **" << endl;
-      cerr << "***********************************************************************" << endl;
+      m_errStream << "***********************************************************************" << endl;
+      m_errStream << "** The Odometry has a big jump here. This is probably a bug in the   **" << endl;
+      m_errStream << "** odometry/laser input. We continue now, but the result is probably **" << endl;
+      m_errStream << "** crap or can lead to a core dump since the map doesn't fit.... C&G **" << endl;
+      m_errStream << "***********************************************************************" << endl;
     }
     
     m_odoPose=relPose;
